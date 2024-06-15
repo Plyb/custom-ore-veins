@@ -1,0 +1,9 @@
+{
+  "values": [
+    "minecraft:coal_block",
+    "minecraft:coal_ore",
+    "minecraft:smooth_basalt",
+    "minecraft:deepslate_redstone_ore"
+  ],
+  "replace": false
+}
