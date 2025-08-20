@@ -19,36 +19,36 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+//import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ChunkNoiseSampler.class)
 public abstract class ChunkNoiseSamplerMixin {
-    @Shadow protected abstract DensityFunction getActualDensityFunction(DensityFunction function);
-
-    @Mutable
-    @Shadow @Final private ChunkNoiseSampler.BlockStateSampler blockStateSampler;
-
-    @Inject(method = "<init>", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void addCustomOreVeins(int horizontalCellCount, NoiseConfig noiseConfig, int startBlockX, int startBlockZ, GenerationShapeConfig generationShapeConfig, DensityFunctionTypes.Beardifying beardifying, ChunkGeneratorSettings chunkGeneratorSettings, AquiferSampler.FluidLevelSampler fluidLevelSampler, Blender blender, CallbackInfo ci, NoiseRouter noiseRouter, NoiseRouter noiseRouter2, ImmutableList.Builder<ChunkNoiseSampler.BlockStateSampler> builder/*, DensityFunction densityFunction*/) {
-        /*
-        ImmutableList.Builder<ChunkNoiseSampler.BlockStateSampler> builder = ImmutableList.builder();
-        builder.add(this.blockStateSampler);
-         */
-        RegistryEntry<DimensionType> dimension = null;
-        if (((Object) noiseConfig) instanceof HasDimensionType noiseWithDimension) {
-            dimension = noiseWithDimension.getDimension();
-        }
-        for (CustomOreVein vein : PlatformHelper.getCustomOreVeinManager().getCustomOreVeins(dimension)) {
-            builder.add(vein.createSampler(
-                    d -> this.getActualDensityFunction(d.apply(new CustomOreVein.Visitor(noiseConfig))),
-                    noiseRouter2.veinToggle(),
-                    noiseRouter2.veinRidged(),
-                    noiseRouter2.veinGap(),
-                    noiseConfig.getOreRandomDeriver()
-            ));
-        }
-        this.blockStateSampler = new ChainedBlockSource(builder.build());
-    }
+//    @Shadow protected abstract DensityFunction getActualDensityFunction(DensityFunction function);
+//
+//    @Mutable
+//    @Shadow @Final private ChunkNoiseSampler.BlockStateSampler blockStateSampler;
+//
+//    @Inject(method = "<init>", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
+//    private void addCustomOreVeins(int horizontalCellCount, NoiseConfig noiseConfig, int startBlockX, int startBlockZ, GenerationShapeConfig generationShapeConfig, DensityFunctionTypes.Beardifying beardifying, ChunkGeneratorSettings chunkGeneratorSettings, AquiferSampler.FluidLevelSampler fluidLevelSampler, Blender blender, CallbackInfo ci, NoiseRouter noiseRouter, NoiseRouter noiseRouter2, ImmutableList.Builder<ChunkNoiseSampler.BlockStateSampler> builder/*, DensityFunction densityFunction*/) {
+//        /*
+//        ImmutableList.Builder<ChunkNoiseSampler.BlockStateSampler> builder = ImmutableList.builder();
+//        builder.add(this.blockStateSampler);
+//         */
+//        RegistryEntry<DimensionType> dimension = null;
+//        if (((Object) noiseConfig) instanceof HasDimensionType noiseWithDimension) {
+//            dimension = noiseWithDimension.getDimension();
+//        }
+//        for (CustomOreVein vein : PlatformHelper.getCustomOreVeinManager().getCustomOreVeins(dimension)) {
+//            builder.add(vein.createSampler(
+//                    d -> this.getActualDensityFunction(d.apply(new CustomOreVein.Visitor(noiseConfig))),
+//                    noiseRouter2.veinToggle(),
+//                    noiseRouter2.veinRidged(),
+//                    noiseRouter2.veinGap(),
+//                    noiseConfig.getOreRandomDeriver()
+//            ));
+//        }
+//        this.blockStateSampler = new ChainedBlockSource(builder.build());
+//    }
 
 
     /*

@@ -20,36 +20,36 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class CustomOreVeinManager extends JsonDataLoader {
-    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    public static final Identifier ID = new Identifier(CustomOreVeinsMod.MOD_ID, "worldgen/custom_ore_veins");
-    private Map<Identifier, CustomOreVein> customOreVeins = Map.of();
-    public Supplier<DynamicRegistryManager> registryAccess = () -> null;
-
-    public CustomOreVeinManager() {
-        super(GSON, ID.getPath());
-    }
-
-
-
-    @Override
-    protected void apply(Map<Identifier, JsonElement> prepared, ResourceManager manager, Profiler profiler) {
-        Map<Identifier, CustomOreVein> veins = new HashMap<>();
-        DynamicRegistryManager registryAccess = this.registryAccess.get();
-        RegistryOps<JsonElement> ops = RegistryOps.of(JsonOps.INSTANCE, registryAccess == null ? BuiltinRegistries.createWrapperLookup() : registryAccess);
-
-        prepared.forEach((identifier, jsonElement) -> {
-            if (jsonElement == null) return;
-            CustomOreVein vein = CustomOreVein.CODEC.decode(ops, jsonElement).getOrThrow(false, s -> {}).getFirst();
-            veins.put(identifier, vein);
-            System.out.println("Loaded " + identifier);
-        });
-
-        this.customOreVeins = veins;
-    }
-
-    public Collection<CustomOreVein> getCustomOreVeins(RegistryEntry<DimensionType> dimension) {
-        if (dimension == null || dimension.getKey().isEmpty()) return Collections.emptyList();
-        return customOreVeins.values().stream().filter(cov -> cov.dimension().equals(dimension.getKey().get())).toList();
-    }
+public class CustomOreVeinManager {//extends JsonDataLoader {
+//    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+//    public static final Identifier ID = new Identifier(CustomOreVeinsMod.MOD_ID, "worldgen/custom_ore_veins");
+//    private Map<Identifier, CustomOreVein> customOreVeins = Map.of();
+//    public Supplier<DynamicRegistryManager> registryAccess = () -> null;
+//
+//    public CustomOreVeinManager() {
+//        super(GSON, ID.getPath());
+//    }
+//
+//
+//
+//    @Override
+//    protected void apply(Map<Identifier, JsonElement> prepared, ResourceManager manager, Profiler profiler) {
+//        Map<Identifier, CustomOreVein> veins = new HashMap<>();
+//        DynamicRegistryManager registryAccess = this.registryAccess.get();
+//        RegistryOps<JsonElement> ops = RegistryOps.of(JsonOps.INSTANCE, registryAccess == null ? BuiltinRegistries.createWrapperLookup() : registryAccess);
+//
+//        prepared.forEach((identifier, jsonElement) -> {
+//            if (jsonElement == null) return;
+//            CustomOreVein vein = CustomOreVein.CODEC.decode(ops, jsonElement).getOrThrow(false, s -> {}).getFirst();
+//            veins.put(identifier, vein);
+//            System.out.println("Loaded " + identifier);
+//        });
+//
+//        this.customOreVeins = veins;
+//    }
+//
+//    public Collection<CustomOreVein> getCustomOreVeins(RegistryEntry<DimensionType> dimension) {
+//        if (dimension == null || dimension.getKey().isEmpty()) return Collections.emptyList();
+//        return customOreVeins.values().stream().filter(cov -> cov.dimension().equals(dimension.getKey().get())).toList();
+//    }
 }
