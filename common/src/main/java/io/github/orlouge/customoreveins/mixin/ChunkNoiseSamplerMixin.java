@@ -1,6 +1,7 @@
 package io.github.orlouge.customoreveins.mixin;
 
 import com.google.common.collect.ImmutableList;
+import com.llamalad7.mixinextras.sugar.Local;
 import io.github.orlouge.customoreveins.CustomOreVein;
 import io.github.orlouge.customoreveins.HasDimensionType;
 import io.github.orlouge.customoreveins.PlatformHelper;
@@ -19,36 +20,37 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-//import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+
+import java.util.List;
 
 @Mixin(ChunkNoiseSampler.class)
 public abstract class ChunkNoiseSamplerMixin {
-//    @Shadow protected abstract DensityFunction getActualDensityFunction(DensityFunction function);
-//
-//    @Mutable
-//    @Shadow @Final private ChunkNoiseSampler.BlockStateSampler blockStateSampler;
-//
-//    @Inject(method = "<init>", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
-//    private void addCustomOreVeins(int horizontalCellCount, NoiseConfig noiseConfig, int startBlockX, int startBlockZ, GenerationShapeConfig generationShapeConfig, DensityFunctionTypes.Beardifying beardifying, ChunkGeneratorSettings chunkGeneratorSettings, AquiferSampler.FluidLevelSampler fluidLevelSampler, Blender blender, CallbackInfo ci, NoiseRouter noiseRouter, NoiseRouter noiseRouter2, ImmutableList.Builder<ChunkNoiseSampler.BlockStateSampler> builder/*, DensityFunction densityFunction*/) {
-//        /*
-//        ImmutableList.Builder<ChunkNoiseSampler.BlockStateSampler> builder = ImmutableList.builder();
-//        builder.add(this.blockStateSampler);
-//         */
-//        RegistryEntry<DimensionType> dimension = null;
-//        if (((Object) noiseConfig) instanceof HasDimensionType noiseWithDimension) {
-//            dimension = noiseWithDimension.getDimension();
-//        }
-//        for (CustomOreVein vein : PlatformHelper.getCustomOreVeinManager().getCustomOreVeins(dimension)) {
-//            builder.add(vein.createSampler(
-//                    d -> this.getActualDensityFunction(d.apply(new CustomOreVein.Visitor(noiseConfig))),
-//                    noiseRouter2.veinToggle(),
-//                    noiseRouter2.veinRidged(),
-//                    noiseRouter2.veinGap(),
-//                    noiseConfig.getOreRandomDeriver()
-//            ));
-//        }
-//        this.blockStateSampler = new ChainedBlockSource(builder.build());
-//    }
+    @Shadow protected abstract DensityFunction getActualDensityFunction(DensityFunction function);
+
+    @Mutable
+    @Shadow @Final private ChunkNoiseSampler.BlockStateSampler blockStateSampler;
+
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void addCustomOreVeins(int horizontalCellCount, NoiseConfig noiseConfig, int startBlockX, int startBlockZ, GenerationShapeConfig generationShapeConfig, DensityFunctionTypes.Beardifying beardifying, ChunkGeneratorSettings chunkGeneratorSettings, AquiferSampler.FluidLevelSampler fluidLevelSampler, Blender blender, CallbackInfo ci, @Local(ordinal = 1) NoiseRouter noiseRouter2, @Local List<ChunkNoiseSampler.BlockStateSampler> list) {
+        /*
+        ImmutableList.Builder<ChunkNoiseSampler.BlockStateSampler> builder = ImmutableList.builder();
+        builder.add(this.blockStateSampler);
+         */
+        RegistryEntry<DimensionType> dimension = null;
+        if (((Object) noiseConfig) instanceof HasDimensionType noiseWithDimension) {
+            dimension = noiseWithDimension.getDimension();
+        }
+        for (CustomOreVein vein : PlatformHelper.getCustomOreVeinManager().getCustomOreVeins(dimension)) {
+            list.add(vein.createSampler(
+                    d -> this.getActualDensityFunction(d.apply(new CustomOreVein.Visitor(noiseConfig))),
+                    noiseRouter2.veinToggle(),
+                    noiseRouter2.veinRidged(),
+                    noiseRouter2.veinGap(),
+                    noiseConfig.getOreRandomDeriver()
+            ));
+        }
+        this.blockStateSampler = new ChainedBlockSource((ChunkNoiseSampler.BlockStateSampler[]) list.toArray());
+    }
 
 
     /*
