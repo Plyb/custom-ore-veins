@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import io.github.orlouge.customoreveins.CustomOreVein;
 import io.github.orlouge.customoreveins.CustomOreVeinManager;
 import io.github.orlouge.customoreveins.CustomOreVeinsMod;
+import io.github.orlouge.customoreveins.PlatformHelper;
 import io.github.orlouge.customoreveins.mixin.ChunkNoiseSamplerMixin;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistrySetupCallback;
@@ -28,26 +29,9 @@ public class CustomOreVeinsFabric implements ModInitializer {
             });
             if (view.asDynamicRegistryManager().getOptional(RegistryKeys.NOISE_PARAMETERS).isPresent()) {
                 DynamicRegistryManager mgr = view.asDynamicRegistryManager();
-                PlatformHelperImpl.CUSTOM_ORE_VEIN_MANAGER = () -> new PlatformHelperImpl.CustomOreVeinManagerFabric(mgr);
-//                Suppliers.memoize(PlatformHelperImpl.CUSTOM_ORE_VEIN_MANAGER);
+                PlatformHelperImpl.CUSTOM_ORE_VEIN_MANAGER.updateRegistryAccess(mgr);
             }
         });
-        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new IdentifiableResourceReloadListener() {
-            @Override
-            public Identifier getFabricId() {
-                return CustomOreVeinManager.ID;
-            }
-
-            @Override
-            public CompletableFuture<Void> reload(Synchronizer synchronizer, ResourceManager manager, Executor prepareExecutor, Executor applyExecutor) {
-                return PlatformHelperImpl.CUSTOM_ORE_VEIN_MANAGER.get().reload(synchronizer, manager, prepareExecutor, applyExecutor);
-            }
-        });
-//        FabricRegistryBuilder.createSimple(CustomOreVeinManager.CUSTOM_ORE_VEINS_REGISTRY_KEY).buildAndRegister();
-//        Registry.register(
-//                Registries.REGISTRIES,
-//                CustomOreVeinManager.CUSTOM_ORE_VEINS_REGISTRY_KEY.getValue(),
-//                reg
-//        );
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(PlatformHelperImpl.CUSTOM_ORE_VEIN_MANAGER);
     }
 }
