@@ -6,7 +6,6 @@ import net.minecraft.server.WorldGenerationProgressListener;
 import net.minecraft.server.world.ChunkTicketManager;
 import net.minecraft.server.world.ServerChunkLoadingManager;
 import net.minecraft.server.world.ServerWorld;
-//import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.structure.StructureTemplateManager;
 import net.minecraft.util.thread.ThreadExecutor;
 import net.minecraft.world.PersistentStateManager;

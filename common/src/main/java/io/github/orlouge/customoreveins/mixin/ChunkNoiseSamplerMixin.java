@@ -1,6 +1,5 @@
 package io.github.orlouge.customoreveins.mixin;
 
-import com.google.common.collect.ImmutableList;
 import com.llamalad7.mixinextras.sugar.Local;
 import io.github.orlouge.customoreveins.CustomOreVein;
 import io.github.orlouge.customoreveins.HasDimensionType;
