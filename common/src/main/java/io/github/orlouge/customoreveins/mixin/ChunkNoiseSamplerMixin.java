@@ -49,7 +49,7 @@ public abstract class ChunkNoiseSamplerMixin {
                     noiseConfig.getOreRandomDeriver()
             ));
         }
-        this.blockStateSampler = new ChainedBlockSource((ChunkNoiseSampler.BlockStateSampler[]) list.toArray());
+        this.blockStateSampler = new ChainedBlockSource((ChunkNoiseSampler.BlockStateSampler[]) list.toArray(new ChunkNoiseSampler.BlockStateSampler[0]));
     }
 
 

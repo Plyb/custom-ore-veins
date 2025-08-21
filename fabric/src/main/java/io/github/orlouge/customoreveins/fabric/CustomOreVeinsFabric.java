@@ -1,22 +1,53 @@
 package io.github.orlouge.customoreveins.fabric;
 
+import com.google.common.base.Suppliers;
+import io.github.orlouge.customoreveins.CustomOreVein;
+import io.github.orlouge.customoreveins.CustomOreVeinManager;
 import io.github.orlouge.customoreveins.CustomOreVeinsMod;
+import io.github.orlouge.customoreveins.mixin.ChunkNoiseSamplerMixin;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistrySetupCallback;
+import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.registry.*;
+import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.util.Identifier;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 public class CustomOreVeinsFabric implements ModInitializer {
     @Override
     public void onInitialize() {
-//        CustomOreVeinsMod.init();
-//        DynamicRegistrySetupCallback.EVENT.register(view -> {
-//            if (view.asDynamicRegistryManager().getOptional(RegistryKeys.NOISE_PARAMETERS).isPresent()) {
-//                DynamicRegistryManager mgr = view.asDynamicRegistryManager();
-//                PlatformHelperImpl.CUSTOM_ORE_VEIN_MANAGER.registryAccess = () -> mgr;
-//            }
-//        });
-//        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(PlatformHelperImpl.CUSTOM_ORE_VEIN_MANAGER);
+        CustomOreVeinsMod.init();
+        DynamicRegistrySetupCallback.EVENT.register(view -> {
+            view.registerEntryAdded(RegistryKeys.NOISE_PARAMETERS, (a, b, c) -> {
+
+            });
+            if (view.asDynamicRegistryManager().getOptional(RegistryKeys.NOISE_PARAMETERS).isPresent()) {
+                DynamicRegistryManager mgr = view.asDynamicRegistryManager();
+                PlatformHelperImpl.CUSTOM_ORE_VEIN_MANAGER = () -> new PlatformHelperImpl.CustomOreVeinManagerFabric(mgr);
+//                Suppliers.memoize(PlatformHelperImpl.CUSTOM_ORE_VEIN_MANAGER);
+            }
+        });
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new IdentifiableResourceReloadListener() {
+            @Override
+            public Identifier getFabricId() {
+                return CustomOreVeinManager.ID;
+            }
+
+            @Override
+            public CompletableFuture<Void> reload(Synchronizer synchronizer, ResourceManager manager, Executor prepareExecutor, Executor applyExecutor) {
+                return PlatformHelperImpl.CUSTOM_ORE_VEIN_MANAGER.get().reload(synchronizer, manager, prepareExecutor, applyExecutor);
+            }
+        });
+//        FabricRegistryBuilder.createSimple(CustomOreVeinManager.CUSTOM_ORE_VEINS_REGISTRY_KEY).buildAndRegister();
+//        Registry.register(
+//                Registries.REGISTRIES,
+//                CustomOreVeinManager.CUSTOM_ORE_VEINS_REGISTRY_KEY.getValue(),
+//                reg
+//        );
     }
 }
